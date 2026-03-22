@@ -17,7 +17,7 @@ def wigner_ville_distribution(x):
     # Compute the autocorrelation function matrix
     if x.ndim != 1:
         raise ValueError("Input data should be one dimensional time series.")
-    
+    """
     #Signal is already complex, so no need for Hilbert transform, but I wanted to check to see how it looks for a sinusoidal signal
     if use_analytic:
         if all(numpy.isreal(x)):
@@ -27,6 +27,7 @@ def wigner_ville_distribution(x):
                                " is of complex data type. The analytic signal"
                                " can only be computed if the input signal is"
                                " real valued.")
+    """
 
 
     # Calculate the wigner distribution
@@ -45,7 +46,7 @@ def wigner_ville_distribution(x):
     wigner_distribution = np.real(np.fft.fft(wigner_integrand, axis=1)).T
     return wigner_distribution
 
-"""
+
 # Compute the Wigner-Ville distribution for the entire signal in chunks to manage memory usage
 chunk_size = 2048
 stride = 1024  # 50% overlap
@@ -70,7 +71,7 @@ plt.ylabel("Frequency")
 plt.colorbar()
 plt.show() 
 
-"""
+
 
 
 
