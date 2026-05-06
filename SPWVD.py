@@ -5,8 +5,7 @@ from scipy.ndimage import gaussian_filter1d
 from scipy.interpolate import interp1d
 from StraightenedSignal import straighten_signal
 from WaterfallCurveData import update_waterfall_curve
-#from MovingAverage import arr, time
-
+from MovingAverage import moving_average
 # Data reading
 data = np.fromfile(r"C:\Users\novac\OneDrive\Desktop\Y2 Books\Q3\Project Q3\Data\FUNcube-1_39444_202601010247.fc32", dtype=np.complex64) # Data from L0 Products, which has the IQ data, already downsampled to 25 kHz
 waterfall_data = np.loadtxt('C:\\Users\\novac\\Downloads\\FUNcube-1_39444_202601010247.dat', skiprows=1) # Data from L1B Products, which has the waterfall curve extracted
@@ -49,9 +48,9 @@ def straighten_signal(iq_data, duration, waterfall_data):
     # Create shifted signal                      
     x = np.zeros(n, dtype=np.complex64) 
     # To shift the signal in the time domain, we can multiply by the complex exponential 
-    x = iq_data * np.exp(-2j * np.pi * deta_freq * t)
+    x = iq_data * np.exp(-2j * np.pi * delta_freq * t)
     return x
-
+"""
 
 data = straighten_signal(data, duration, waterfall_data)  # shift the signal to 0 Hz before processing
 
@@ -60,8 +59,8 @@ def low_pass_filter(signal, cutoff_freq, sampling_rate):
     from scipy.signal import butter, filtfilt 
     # butter function returns filter coefficients for a Butterworth low-pass filter
     # filtfilt applies the filter forward and backward to avoid phase distortion, giving zero-phase filtering
-    #nyquist = 0.5 * sampling_rate
-    #normal_cutoff = cutoff_freq / nyquist
+    nyquist = 0.5 * sampling_rate
+    normal_cutoff = cutoff_freq / nyquist
     N = 4  # filter order, higher = sharper cutoff but more ringing
     b, a = butter(N, normal_cutoff, btype='low', analog=False)
     filtered_signal = filtfilt(b, a, signal) # deals with edge effects by applying the filter in both directions
@@ -70,9 +69,9 @@ def low_pass_filter(signal, cutoff_freq, sampling_rate):
 
 
 # Apply low pass filter to the entire signal before processing to reduce high-frequency noise that can cause artifacts in the WVD
-cutoff_freq = bandwidth = baud_rate  
+cutoff_freq = bandwidth = baud_rate *0.7  # cutoff frequency for low-pass filter, set to 70% of the baud rate to preserve the main signal while reducing noise 
 data = low_pass_filter(data, cutoff_freq=cutoff_freq, sampling_rate=sampling_rate)
-"""
+
 
 def wigner_ville_distribution(x, max_tau):
     # instead of looping over each time point t, we build matrices of indices to compute all t+tau and t-tau combinations at once, then do a single FFT across the lag dimension for all time points simultaneously
@@ -134,7 +133,7 @@ power_time = np.concatenate(power_time)
 time_power = np.linspace(0, duration, len(power_time))  
 
 np.savetxt("Power_list_updated.csv", power_time_updated, delimiter=",")
-
+power_time_updated = moving_average(power_time_updated, window_size=10)  # smooth the power over time with a moving average to reduce noise in the power plot
 """
 # Plotting
 num_time = wvd.shape[0]
