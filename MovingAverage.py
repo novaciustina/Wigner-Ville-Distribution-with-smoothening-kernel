@@ -7,9 +7,12 @@ n = len(arr)
 print(n) 
 time = np.linspace(0, duration, n)  # time points corresponding to the data
 window_size = 500  # size of the moving average window
+
+
 def moving_average(arr, window_size):
     """Calculate the moving average of the given data with the specified window size."""
     #return np.convolve(data, np.ones(window_size)/window_size, mode='valid')
+    print(len(arr))
     i = 0
     moving_averages = []
     while i < len(arr) - window_size + 1:

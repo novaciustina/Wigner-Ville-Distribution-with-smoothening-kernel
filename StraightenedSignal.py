@@ -30,7 +30,7 @@ def straighten_signal(iq_data, duration, waterfall_data):
     x = iq_data * np.exp(-2j * np.pi * delta_freq * t)
     return x
 
-x = straighten_signal(iq_data, duration, waterfall_data)
-t = np.arange(0, duration, dt)
-plt.plot(t, np.real(x))
-plt.show()
+#x = straighten_signal(iq_data, duration, waterfall_data)
+#t = np.arange(0, duration, dt)
+#plt.plot(t, np.real(x))
+#plt.show()

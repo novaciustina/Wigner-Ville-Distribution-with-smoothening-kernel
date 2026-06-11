@@ -1,5 +1,4 @@
 import numpy as np
-from numpy import load
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
@@ -13,6 +12,7 @@ def update_waterfall_curve(data):
     baud_rate = 1200
 
     # Use beacon frequency to shift the frequency values, depends on satellite
+    # Check other satellites for their beacon frequencies and update accordingly
     f_beacon = 145.935 * 10**6 # Hz, the frequency of the beacon signal
     freq = freq - f_beacon # Shift the frequency values 
 
@@ -47,12 +47,25 @@ def update_waterfall_curve(data):
     freq = freq - d # Subtract the frequency value at the inflection point from all frequency values
     fitted_freq = arctan_func(time, *popt) - d # Shift the fitted curve as well to validate
     return freq, fitted_freq, time
-"""
+
 freq, fitted_freq, time = update_waterfall_curve(data)
+
+""""
 # Plot the original frequency curve and the fitted curve
-plt.plot(freq, time)
-plt.plot(fitted_freq, time)
+plt.figure(figsize=(10, 6))
+
+plt.plot(freq, time, color='blue', label='Original S Curve')
+plt.plot(fitted_freq, time, color='red', linewidth=2, label='Arctan fitted Curve')
+
 plt.gca().invert_yaxis()
+
+plt.xlabel('Frequency (Hz)')
+plt.ylabel('Time (s)')
+#plt.title('Waterfall Curve and Fit')
+
+plt.legend()
+plt.grid(True, alpha=0.3)
+
+plt.tight_layout()
 plt.show()
 """
-
