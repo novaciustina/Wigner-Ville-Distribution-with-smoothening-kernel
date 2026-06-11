@@ -1,0 +1,4 @@
+*.fc32
+.vscode/
+__pycache__/
+*.pyc
